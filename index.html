@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Snake</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js" defer></script>
+</head>
+<body>
+    <div id="title">
+        <div class="title-text">
+            <img src="./assets/snake.png" alt="picture of snake" width="100px">NAKE
+        </div>
+    </div>
+
+    <div id="start">
+        <button class="start-button">START</button>
+    </div>
+
+    <div id="game-section">
+        <div id="grid">
+
+        </div>
+    </div>
+
+
+
+
+    <audio id="musicplayer" loop>
+        <source src="./assets/theme.mp3">
+        Cannot play Music!
+    </audio>
+    <script>
+        const body = document.querySelector("body");
+        const html = document.querySelector("html");
+        const title = document.querySelector(".title-text");
+        window.addEventListener("load", () => {
+            body.classList.add("loaded");
+            html.classList.add("loaded");
+            title.classList.add("title-loaded");
+        })
+    </script>
+</body>
+</html>

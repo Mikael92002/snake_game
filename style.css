@@ -1,0 +1,84 @@
+@font-face {
+    font-family: "cartoon font";
+    src: url("./fonts/chicken_pie/CHICKEN\ Pie.otf") format("opentype");
+    font-weight: 100;
+}
+
+body,
+html {
+    margin: 0;
+    padding: 0;
+    opacity: 0;
+    min-height: 100dvh;
+}
+
+html {
+    background-image: url("./assets/background.png");
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.loaded {
+    animation: 1s ease-out 0s 1 forwards pageLoad;
+}
+
+@keyframes pageLoad {
+    0% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 100;
+    }
+}
+
+#title {
+    font-family: "cartoon font";
+    font-size: 80px;
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    align-items: flex-end;
+    color: rgb(219, 188, 104);
+    text-shadow:
+        -1px -1px 0 #000,
+        1px -1px 0 #000,
+        -1px 1px 0 #000,
+        1px 1px 0 #000;
+}
+
+.title-loaded {
+    animation: 2s ease-in-out 0.5s 1 funky;
+}
+
+.title-text {
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    background-color: rgba(0, 0, 0, 0.3);
+    box-shadow: rgba(0, 0, 0, 0.3) 0px 0px 20px 20px;
+    padding: 0px 10px;
+    margin-top: 10px;
+}
+
+.title-text>img {
+    margin-right: 3px;
+}
+
+@keyframes funky {
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(2) translateY(100px);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
