@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Snake</title>
     <link rel="stylesheet" href="style.css">
-    <script src="script.js" defer></script>
+    <script src="script.js" defer type="module"></script>
 </head>
 <body>
     <div id="title">
@@ -15,7 +15,7 @@
     </div>
 
     <div id="start">
-        <button class="start-button">START</button>
+        <button class="start-button" disabled>START</button>
     </div>
 
     <div id="game-section">
@@ -24,21 +24,24 @@
         </div>
     </div>
 
-
-
-
     <audio id="musicplayer" loop>
         <source src="./assets/theme.mp3">
         Cannot play Music!
     </audio>
+    
     <script>
         const body = document.querySelector("body");
         const html = document.querySelector("html");
         const title = document.querySelector(".title-text");
+        const startButton = document.querySelector(".start-button");
         window.addEventListener("load", () => {
             body.classList.add("loaded");
             html.classList.add("loaded");
             title.classList.add("title-loaded");
+            setTimeout(() => {
+                startButton.classList.add("visible");
+                startButton.disabled = false;
+            }, 2800);
         })
     </script>
 </body>
