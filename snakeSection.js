@@ -4,12 +4,10 @@ export class SnakeSection {
   position;
   nextSection;
   prevSection;
-  direction;
 
-  constructor(position, direction) {
+  constructor(position) {
     // position is coords in x,y:
     this.position = position;
-    this.orientation = direction;
     this.nextSection = null;
     this.prevSection = null;
   }

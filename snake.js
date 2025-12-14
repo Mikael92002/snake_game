@@ -4,33 +4,32 @@ export class Snake {
   head;
   tail;
   length;
+  currDirection;
 
   constructor() {
-    this.head = this.tail = new SnakeSection([0, 0], "right");
+    this.head = this.tail = new SnakeSection([0, 0]);
+    this.currDirection = "right";
   }
 
-  addSection() {
-    const newSection = new SnakeSection([
-      this.tail.position[0],
-      this.tail.position[1],
-    ]);
-  }
-
-  determineNextSection() {
+  moveSnake(newX, newY) {
+    const newSection = new SnakeSection([newX, newY]);
     if (this.head === this.tail) {
-      if (this.head.direction === "right") {
-        const newCoords = [this.head.position[0] - 1, this.head.position[1]];
-        // note newCoords needs to be an array:
-        const newSection = new SnakeSection(newCoords, "right");
-      }
-      else if(this.head.direction === "left"){
-        const newCoords = [this.head.position[0]+1, this.head.position[1]];
-        const newSection = new SnakeSection(this.validateCoords(newCoords), "left");
-      }
+      this.head = this.tail = newSection;
+      return;
     }
+    newSection.nextSection = this.head;
+    this.head.prevSection = newSection;
+    this.head = newSection;
+    this.tail = this.tail.prevSection;
+    this.tail.nextSection = null;
   }
 
   validateCoords(coords) {
-
+    if(coords[0] > 99){
+      coords[0] = 0;
+    }
+    if(coords[0] < 0){
+      coords[0] = 99;
+    }
   }
 }
