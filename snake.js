@@ -12,10 +12,12 @@ export class Snake {
     this.gameBoard = gameBoard;
     this.head = this.tail = new SnakeSection([0, 0]);
     this.currDirection = "right";
-    console.log(this.gameBoard.getCoords(25, 10));
+    console.log(this.gameBoard.getCoords(10, 0));
   }
 
+  // use either moveSnake or growSnake depending if apple is present or not:
   moveSnake(newX, newY) {
+    // if getCoords(x,y)[2] === false, move
     const newSection = new SnakeSection([newX, newY]);
     if (this.head === this.tail) {
       this.head = this.tail = newSection;
@@ -28,10 +30,19 @@ export class Snake {
     this.tail.nextSection = null;
   }
 
-  growSnake(x, y) {
-    //if()
+  growSnake(newX, newY) {
+    // if getCoords(x,y)[2] === true, grow
+    const newSection = new SnakeSection([newX, newY]);
+    newSection.nextSection = this.head;
+    this.head.prevSection = newSection;
+    this.head = newSection;
   }
 
+  changeDirection(input){
+    this.currDirection = input;
+  }
+
+  // wrap around coords:
   validateCoords(coords) {
     if (coords[0] > 99) {
       coords[0] = 0;
