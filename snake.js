@@ -1,14 +1,18 @@
 import { SnakeSection } from "./snakeSection.js";
+import { gameBoard } from "./gameBoard.js";
 
 export class Snake {
   head;
   tail;
   length;
   currDirection;
+  gameBoard;
 
-  constructor() {
+  constructor(gameBoard) {
+    this.gameBoard = gameBoard;
     this.head = this.tail = new SnakeSection([0, 0]);
     this.currDirection = "right";
+    console.log(this.gameBoard.getCoords(25, 10));
   }
 
   moveSnake(newX, newY) {
@@ -24,11 +28,19 @@ export class Snake {
     this.tail.nextSection = null;
   }
 
+  growSnake(x, y) {
+    //if()
+  }
+
   validateCoords(coords) {
-    if(coords[0] > 99){
+    if (coords[0] > 99) {
       coords[0] = 0;
+    } else if (coords[0] < 0) {
+      coords[0] = 99;
     }
-    if(coords[0] < 0){
+    if (coords[1] > 99) {
+      coords[1] = 0;
+    } else if (coords[0] < 0) {
       coords[0] = 99;
     }
   }
