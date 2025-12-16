@@ -98,14 +98,45 @@ body {
     }
 }
 
-.start-button{
-opacity: 0;
-font-family: "cartoon font";
-background-color: green;
-color: rgb(219, 188, 104);
-font-size: xx-large;
+.start-button {
+    font-family: "cartoon font";
+    background-color: green;
+    color: rgb(219, 188, 104);
+    font-size: xx-large;
+    opacity: 0; /* need for pageLoad animation */
 }
-.start-button.visible{
+
+.start-button.visible {
     opacity: 1;
     animation: 1s ease-out 0s 1 forwards pageLoad;
+}
+
+.start-button.invisible{
+    animation: 1s ease-out 0s 1 forwards fadeOut;
+}
+
+@keyframes fadeOut {
+    0%{
+        opacity: 1;
+    }
+    100%{
+        opacity: 0;
+    }
+}
+
+.start-button:disabled{
+    display: none;
+}
+
+
+/* .start-button:disabled {
+    display: none;
+} */
+
+#grid {
+    background-color: white;
+    padding: 6px;
+    border-radius: 20px;
+    outline: 3px solid black;
+    box-sizing: border-box;
 }

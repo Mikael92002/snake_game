@@ -1,23 +1,22 @@
 export class gameBoard {
   grid;
-  bodyElement;
+  gridContainer;
 
   constructor() {
-    this.bodyElement = document.querySelector("body");
+    this.gridContainer = document.querySelector("#grid");
     this.grid = [];
     for (let i = 0; i < 100; i++) {
       const gridDivContainer = document.createElement("div");
       gridDivContainer.style.display = "flex";
-      gridDivContainer.style.border = "1px solid black"
       for (let y = 0; y < 100; y++) {
         this.grid.push([i, y, false]);
         const gridDiv = document.createElement("div");
         gridDiv.setAttribute("data-coords", [i,y]);
-        gridDiv.style.border = "1px solid red"
-        gridDiv.style.padding = "2px";
+        gridDiv.style.padding = "3px";
+        gridDiv.style.border = "0.5px solid black";
         gridDivContainer.append(gridDiv);
       }
-      this.bodyElement.append(gridDivContainer);
+      this.gridContainer.append(gridDivContainer);
     }
   }
 

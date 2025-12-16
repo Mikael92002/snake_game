@@ -4,4 +4,12 @@ export class View{
         this.startButton = document.querySelector(".start-button");
     }
 
+    renderSnake(coordsArr){
+
+    }
+
+    clearSnake(coordsArr){
+
+    }
+
 }
