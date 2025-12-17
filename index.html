@@ -10,7 +10,7 @@
 <body>
     <div id="title">
         <div class="title-text">
-            <img src="./assets/snake.png" alt="picture of snake" width="100px">NAKE
+            <img src="./assets/snake.png" alt="picture of snake" width="100px" class="snake-img">NAKE
         </div>
     </div>
 
@@ -34,14 +34,13 @@
         const html = document.querySelector("html");
         const title = document.querySelector(".title-text");
         const startButton = document.querySelector(".start-button");
+        const snakeImg = document.querySelector(".snake-img");
         window.addEventListener("load", () => {
             body.classList.add("loaded");
             html.classList.add("loaded");
             title.classList.add("title-loaded");
-            setTimeout(() => {
-                startButton.classList.add("visible");
-                startButton.disabled = false;
-            }, 2800);
+            startButton.classList.add("visible");
+            snakeImg.classList.add("loaded");
         })
     </script>
 </body>

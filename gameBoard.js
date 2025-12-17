@@ -5,15 +5,15 @@ export class gameBoard {
   constructor() {
     this.gridContainer = document.querySelector("#grid");
     this.grid = [];
-    for (let i = 0; i < 100; i++) {
+    for (let i = 0; i < 25; i++) {
       const gridDivContainer = document.createElement("div");
-      gridDivContainer.style.display = "flex";
-      for (let y = 0; y < 100; y++) {
-        this.grid.push([i, y, false]);
+      gridDivContainer.classList.add("grid-div-container");
+      for (let j = 0; j < 25; j++) {
+        this.grid.push([j, i, false]); // put an object (apple, bomb) instead of false?
+
         const gridDiv = document.createElement("div");
-        gridDiv.setAttribute("data-coords", [i,y]);
-        gridDiv.style.padding = "3px";
-        gridDiv.style.border = "0.5px solid black";
+        gridDiv.setAttribute("data-coords", [j,i]);
+        gridDiv.classList.add("grid-div");
         gridDivContainer.append(gridDiv);
       }
       this.gridContainer.append(gridDivContainer);
@@ -21,7 +21,7 @@ export class gameBoard {
   }
 
   getCoords(x, y) {
-    if ((x >= 0 || x <= 99) && (y >= 0 || y <= 99))
-      return this.grid[x * 100 + y];
+    if ((x >= 0 || x <= 24) && (y >= 0 || y <= 24))
+      return this.grid[x * 25 + y];
   }
 }

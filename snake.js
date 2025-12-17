@@ -2,7 +2,7 @@ import { SnakeSection } from "./snakeSection.js";
 import { gameBoard } from "./gameBoard.js";
 
 export class Snake {
-  head;
+  head; // head also acts as prevCoords to determine next coords
   tail;
   length;
   currDirection;
@@ -12,12 +12,11 @@ export class Snake {
     this.gameBoard = gameBoard;
     this.head = this.tail = new SnakeSection([0, 0]);
     this.currDirection = "right";
-    console.log(this.gameBoard.getCoords(10, 0));
   }
 
   // use either moveSnake or growSnake depending if apple is present or not:
   moveSnake(newX, newY) {
-    // if getCoords(x,y)[2] === false, move
+    // if getCoords(x,y)[2] !== apple, move || if(getCoords(x,y)[2] === bomb, end game
     const newSection = new SnakeSection([newX, newY]);
     if (this.head === this.tail) {
       this.head = this.tail = newSection;
@@ -31,28 +30,26 @@ export class Snake {
   }
 
   growSnake(newX, newY) {
-    // if getCoords(x,y)[2] === true, grow
+    // if getCoords(x,y)[2] === apple, grow
     const newSection = new SnakeSection([newX, newY]);
     newSection.nextSection = this.head;
     this.head.prevSection = newSection;
     this.head = newSection;
   }
 
-  changeDirection(input){
+  changeDirection(input) {
     this.currDirection = input;
   }
 
-  // wrap around coords:
-  validateCoords(coords) {
-    if (coords[0] > 99) {
-      coords[0] = 0;
-    } else if (coords[0] < 0) {
-      coords[0] = 99;
+  // used with view to render snake/ clear snake:
+  getSnakeCoords() {
+    let headCopy = this.head;
+    let arr = [];
+
+    while (headCopy !== null) {
+      arr.push(headCopy.position);
+      headCopy = headCopy.nextSection;
     }
-    if (coords[1] > 99) {
-      coords[1] = 0;
-    } else if (coords[0] < 0) {
-      coords[0] = 99;
-    }
+    return arr;
   }
 }
