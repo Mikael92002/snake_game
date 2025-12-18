@@ -60,6 +60,10 @@ export class View {
     }
   }
 
+  renderObject(objectCoords){
+    
+  }
+
   determineTailDirection(tailCoords, coordsBeforeTail) {
     if (tailCoords[0] - coordsBeforeTail[0] < 0) {
       return "right";
@@ -73,27 +77,24 @@ export class View {
   }
 
   determineBodyDirection(prevCoords, currCoords, nextCoords) {
-  const dxPrev = prevCoords[0] - currCoords[0];
-  const dyPrev = prevCoords[1] - currCoords[1];
-  const dxNext = nextCoords[0] - currCoords[0];
-  const dyNext = nextCoords[1] - currCoords[1];
+    const dxPrev = prevCoords[0] - currCoords[0];
+    const dyPrev = prevCoords[1] - currCoords[1];
+    const dxNext = nextCoords[0] - currCoords[0];
+    const dyNext = nextCoords[1] - currCoords[1];
 
-  // 1. Straight lines
-  if (dyPrev === 0 && dyNext === 0) return "horizontal";
-  if (dxPrev === 0 && dxNext === 0) return "vertical";
+    if (dyPrev === 0 && dyNext === 0) return "horizontal";
+    if (dxPrev === 0 && dxNext === 0) return "vertical";
 
-  // 2. Determine which sides are occupied
-  // (dy -1 is Up, dy 1 is Down, dx -1 is Left, dx 1 is Right)
-  const isUp    = (dyPrev === -1 || dyNext === -1);
-  const isDown  = (dyPrev === 1  || dyNext === 1);
-  const isLeft  = (dxPrev === -1 || dxNext === -1);
-  const isRight = (dxPrev === 1  || dxNext === 1);
+    const isUp = dyPrev === -1 || dyNext === -1;
+    const isDown = dyPrev === 1 || dyNext === 1;
+    const isLeft = dxPrev === -1 || dxNext === -1;
+    const isRight = dxPrev === 1 || dxNext === 1;
 
-  if (isUp && isRight)   return "turn-tr"; // Top-Right (┌)
-  if (isRight && isDown) return "turn-br"; // Bottom-Right (┐)
-  if (isDown && isLeft)  return "turn-bl"; // Bottom-Left (┘)
-  if (isLeft && isUp)    return "turn-tl"; // Top-Left (└)
+    if (isUp && isRight) return "turn-tr"; // Top-Right (┌)
+    if (isRight && isDown) return "turn-br"; // Bottom-Right (┐)
+    if (isDown && isLeft) return "turn-bl"; // Bottom-Left (┘)
+    if (isLeft && isUp) return "turn-tl"; // Top-Left (└)
 
-  return "horizontal"; 
-}
+    return "horizontal";
+  }
 }

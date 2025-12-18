@@ -1,3 +1,5 @@
+import { ObjectSpawn } from "./objectSpawn";
+
 export class Controller {
   view;
   model;
@@ -28,27 +30,30 @@ export class Controller {
   }
 
   handleStartClick() {
-    if (!this.musicPlaying) {
-      this.musicPlayer.play().catch((error) => {
-        console.error("Music playback failed", error);
-      });
-      this.musicPlaying = true;
+    if (!this.gameStarted) {
+      if (!this.musicPlaying) {
+        this.musicPlayer.play().catch((error) => {
+          console.error("Music playback failed", error);
+        });
+        this.musicPlaying = true;
+      }
+
+      this.gameStarted = true;
+      this.startButton.classList.remove("visible");
+      this.startButton.classList.add("clicked");
+
+      setTimeout(() => {
+        this.startButton.disabled = true;
+      }, 1000);
+      // initial render:
+      this.view.renderSnake(
+        this.model.getSnakeCoords(),
+        this.model.currDirection
+      );
+      // movementLoop:
+
+      this.moveLoop();
     }
-
-    this.gameStarted = true;
-    this.startButton.classList.remove("visible");
-    this.startButton.classList.add("clicked");
-
-    setTimeout(() => {
-      this.startButton.disabled = true;
-    }, 1000);
-    // initial render:
-    this.view.renderSnake(
-      this.model.getSnakeCoords(),
-      this.model.currDirection
-    );
-    // movementLoop:
-    this.moveLoop();
   }
 
   moveLoop() {
@@ -78,7 +83,16 @@ export class Controller {
         this.model.getSnakeCoords(),
         this.model.currDirection
       );
-    }, 100);
+    }, 200);
+  }
+
+  ObjectSpawnLoop(){
+    setInterval(()=>{
+      this.view.clearObject();
+      let snakeCoords = this.model.getSnakeCoords();
+      let objectSpawn = new ObjectSpawn(snakeCoords);
+      this.view.renderObject();
+    }, 10000)
   }
 
   determineNextCoords(direction, coords) {
@@ -112,13 +126,22 @@ export class Controller {
 
   handleDirectionClick(key) {
     if (key === "ArrowUp") {
-      this.model.currDirection = "up";
+      if (this.model.currDirection !== "down") {
+        this.model.currDirection = "up";
+      }
     } else if (key === "ArrowDown") {
-      this.model.currDirection = "down";
+      if (this.model.currDirection !== "up") {
+        this.model.currDirection = "down";
+      }
     } else if (key === "ArrowRight") {
-      this.model.currDirection = "right";
+      if (this.model.currDirection !== "left") {
+        this.model.currDirection = "right";
+      }
     } else if (key === "ArrowLeft") {
-      this.model.currDirection = "left";
+      if (this.model.currDirection !== "right") {
+        this.model.currDirection = "left";
+      }
     }
   }
+
 }
