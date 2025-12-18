@@ -12,14 +12,19 @@ export class Controller {
 
     this.startButton = document.querySelector(".start-button");
     this.musicPlayer = document.querySelector("#musicplayer");
+    this.directionQueue = null;
 
     this.startButton.addEventListener("click", () => {
       this.handleStartClick();
     });
 
     document.addEventListener("keydown", (e) => {
-      this.handleDirectionClick(e.key);
+      this.directionQueue = e.key;
+      // this.handleDirectionClick(e.key);
     });
+
+    // for grow test:
+    this.model.gameBoard.insertAtCoords(5, 0, "apple");
   }
 
   handleStartClick() {
@@ -38,13 +43,20 @@ export class Controller {
       this.startButton.disabled = true;
     }, 1000);
     // initial render:
-    this.view.renderSnake(this.model.getSnakeCoords(), this.model.currDirection);
+    this.view.renderSnake(
+      this.model.getSnakeCoords(),
+      this.model.currDirection
+    );
     // movementLoop:
     this.moveLoop();
   }
 
   moveLoop() {
     setInterval(() => {
+      if (this.directionQueue !== null) {
+        this.handleDirectionClick(this.directionQueue);
+        this.directionQueue = null;
+      }
       let oldSnakeCoords = this.model.getSnakeCoords();
       this.view.clearSnake(oldSnakeCoords);
       let nextCoords = this.determineNextCoords(
@@ -52,9 +64,21 @@ export class Controller {
         this.model.head.position
       );
       this.validateCoords(nextCoords);
-      this.model.moveSnake(nextCoords[0], nextCoords[1]);
-      this.view.renderSnake(this.model.getSnakeCoords(), this.model.currDirection);
-    }, 1000);
+      if (
+        this.model.gameBoard.getCoords(nextCoords[0], nextCoords[1])[2] ===
+        "apple"
+      ) {
+        console.log("found");
+        this.model.growSnake(nextCoords[0], nextCoords[1]);
+      } else {
+        this.model.moveSnake(nextCoords[0], nextCoords[1]);
+      }
+
+      this.view.renderSnake(
+        this.model.getSnakeCoords(),
+        this.model.currDirection
+      );
+    }, 100);
   }
 
   determineNextCoords(direction, coords) {
@@ -87,25 +111,14 @@ export class Controller {
   }
 
   handleDirectionClick(key) {
-    const snakeHead = document.querySelector(".head");
-    console.log(snakeHead);
-    snakeHead.classList.forEach((className) => {
-      if (className !== "head") {
-        snakeHead.classList.remove(className);
-      }
-    });
     if (key === "ArrowUp") {
       this.model.currDirection = "up";
-      snakeHead.classList.add("up");
     } else if (key === "ArrowDown") {
       this.model.currDirection = "down";
-      snakeHead.classList.add("down");
     } else if (key === "ArrowRight") {
       this.model.currDirection = "right";
-      snakeHead.classList.add("right");
     } else if (key === "ArrowLeft") {
       this.model.currDirection = "left";
-      snakeHead.classList.add("left");
     }
   }
 }

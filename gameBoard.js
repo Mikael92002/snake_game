@@ -9,7 +9,7 @@ export class gameBoard {
       const gridDivContainer = document.createElement("div");
       gridDivContainer.classList.add("grid-div-container");
       for (let j = 0; j < 25; j++) {
-        this.grid.push([j, i, false]); // put an object (apple, bomb) instead of false?
+        this.grid.push([j, i, null]); // put an object (apple, bomb) instead of false?
 
         const gridDiv = document.createElement("div");
         gridDiv.setAttribute("data-coords", [j,i]);
@@ -23,5 +23,10 @@ export class gameBoard {
   getCoords(x, y) {
     if ((x >= 0 || x <= 24) && (y >= 0 || y <= 24))
       return this.grid[x * 25 + y];
+  }
+
+  insertAtCoords(x,y, item){
+    if ((x >= 0 || x <= 24) && (y >= 0 || y <= 24))
+      this.grid[x * 25 + y][2] = item
   }
 }

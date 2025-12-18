@@ -138,33 +138,93 @@ body {
     box-sizing: border-box;
 }
 
-.grid-div-container{
+.grid-div-container {
     display: flex;
 }
 
 .grid-div {
     display: flex;
-    border: 0.5px solid black;
     width: 20px;
     height: 20px;
     align-items: center;
     justify-content: center;
 }
 
-.grid-div>img{
+.grid-div>img {
     height: 20px;
     width: 20px;
 }
 
-.head.right{
+.head {
+    transition: transform 0.5s linear;
+}
+
+.head.right {
     transform: rotateY(180deg);
 }
-.head.left{
+
+.head.left {
     transform: rotateY(0deg);
 }
-.head.up{
+
+.head.up {
     transform: rotateZ(90deg);
 }
-.head.down{
-    transform: rotateZ(270deg);
+
+.head.down {
+    transform: rotateZ(-90deg);
+}
+
+.tail {
+    transition: transform 0.5s linear;
+}
+
+.tail.right {
+    transform: rotateY(180deg);
+}
+
+.tail.left {
+    transform: rotateY(0deg);
+}
+
+.tail.up {
+    transform: rotateZ(90deg);
+}
+
+.tail.down {
+    transform: rotateZ(-90deg)
+}
+
+.body {
+    transition: transform 0.5s linear;
+}
+
+.body.horizontal {}
+
+.body.vertical {
+    transform: rotateZ(90deg) translateY(-1px);
+}
+
+.turn {
+    transform-origin: center;
+}
+
+/* 0 degrees: Connects Top and Right (┌) */
+.turn.turn-tr {
+    transform: translate(3px, -3px) rotate(270deg);
+}
+
+/* 90 degrees clockwise: Connects Right and Bottom (┐) */
+.turn.turn-br {
+    transform: translate(4px, 3px) rotate(0deg);
+}
+
+/* 180 degrees clockwise: Connects Bottom and Left (┘) */
+.turn.turn-bl {
+    transform: translate(-3px, 4px) rotate(90deg);
+}
+
+/* 270 degrees clockwise: Connects Left and Top (└) */
+.turn.turn-tl {
+    transform: translate(-4px, -3px) rotate(180deg);
 }
