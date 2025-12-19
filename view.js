@@ -60,8 +60,19 @@ export class View {
     }
   }
 
-  renderObject(objectCoords){
-    
+  renderObject(objectCoords) {
+    if(objectCoords !== null){
+      
+    }
+  }
+
+  clearObject(objectCoords) {
+    if (objectCoords !== null) {
+      const gridDiv = document.querySelector(`[data-coords="${objectCoords}"]`);
+      if (gridDiv) {
+        gridDiv.removeChild(gridDiv.firstChild);
+      }
+    }
   }
 
   determineTailDirection(tailCoords, coordsBeforeTail) {

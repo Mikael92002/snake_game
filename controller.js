@@ -1,5 +1,3 @@
-import { ObjectSpawn } from "./objectSpawn";
-
 export class Controller {
   view;
   model;
@@ -11,6 +9,12 @@ export class Controller {
     this.model = model;
     this.musicPlaying = false;
     this.gameStarted = false;
+    this.gameBoardSet = new Set();
+    for (let i = 0; i < 25; i++) {
+      for (let j = 0; j < 25; j++) {
+        this.gameBoardSet.add(j + "," + i);
+      }
+    }
 
     this.startButton = document.querySelector(".start-button");
     this.musicPlayer = document.querySelector("#musicplayer");
@@ -69,30 +73,33 @@ export class Controller {
         this.model.head.position
       );
       this.validateCoords(nextCoords);
+      let newSnakeCoords;
       if (
         this.model.gameBoard.getCoords(nextCoords[0], nextCoords[1])[2] ===
         "apple"
       ) {
         console.log("found");
         this.model.growSnake(nextCoords[0], nextCoords[1]);
+        newSnakeCoords = this.model.getSnakeCoords();
+        this.removeFromSet(newSnakeCoords);
       } else {
         this.model.moveSnake(nextCoords[0], nextCoords[1]);
+        newSnakeCoords = this.model.getSnakeCoords();
+        this.removeFromSet(newSnakeCoords);
+        this.addToSet(newSnakeCoords[newSnakeCoords.length - 1]);
       }
+      console.log(this.gameBoardSet);
 
-      this.view.renderSnake(
-        this.model.getSnakeCoords(),
-        this.model.currDirection
-      );
+      this.view.renderSnake(newSnakeCoords, this.model.currDirection);
     }, 200);
   }
 
-  ObjectSpawnLoop(){
-    setInterval(()=>{
+  ObjectSpawnLoop() {
+    setInterval(() => {
       this.view.clearObject();
-      let snakeCoords = this.model.getSnakeCoords();
-      let objectSpawn = new ObjectSpawn(snakeCoords);
+      
       this.view.renderObject();
-    }, 10000)
+    }, 10000);
   }
 
   determineNextCoords(direction, coords) {
@@ -144,4 +151,19 @@ export class Controller {
     }
   }
 
+  // argument here is snakeCoords:
+  // in moveSnake, remove all coords
+  // in growSnake, also remove all coords
+  removeFromSet(coords) {
+    for (let coord of coords) {
+      let coordAsString = coord[0] + "," + coord[1];
+      this.gameBoardSet.delete(coordAsString);
+    }
+  }
+
+  // add tail coord ONLY in moveSnake
+  addToSet(tailCoord) {
+    let tailCoordAsString = tailCoord[0] + "," + tailCoord[1];
+    this.gameBoardSet.add(tailCoordAsString);
+  }
 }
