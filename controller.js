@@ -3,6 +3,9 @@ export class Controller {
   model;
   musicPlaying;
   startButton;
+  applePosition;
+  moveIntervalID;
+  objectSpawnIntervalID;
 
   constructor(model, view) {
     this.view = view;
@@ -10,6 +13,10 @@ export class Controller {
     this.musicPlaying = false;
     this.gameStarted = false;
     this.gameBoardSet = new Set();
+    this.applePosition = null;
+    this.moveIntervalID = null;
+    this.objectSpawnIntervalID = null;
+
     for (let i = 0; i < 25; i++) {
       for (let j = 0; j < 25; j++) {
         this.gameBoardSet.add(j + "," + i);
@@ -26,11 +33,7 @@ export class Controller {
 
     document.addEventListener("keydown", (e) => {
       this.directionQueue = e.key;
-      // this.handleDirectionClick(e.key);
     });
-
-    // for grow test:
-    this.model.gameBoard.insertAtCoords(5, 0, "apple");
   }
 
   handleStartClick() {
@@ -56,12 +59,13 @@ export class Controller {
       );
       // movementLoop:
 
-      this.moveLoop();
+      this.moveIntervalID = this.moveLoop();
+      this.objectSpawnIntervalID = this.ObjectSpawnLoop();
     }
   }
 
   moveLoop() {
-    setInterval(() => {
+    return setInterval(() => {
       if (this.directionQueue !== null) {
         this.handleDirectionClick(this.directionQueue);
         this.directionQueue = null;
@@ -82,23 +86,32 @@ export class Controller {
         this.model.growSnake(nextCoords[0], nextCoords[1]);
         newSnakeCoords = this.model.getSnakeCoords();
         this.removeFromSet(newSnakeCoords);
+        this.view.clearObject(this.applePosition);
+        this.applePosition = null;
+        this.model.gameBoard.deleteAtCoords(nextCoords[0], nextCoords[1]);
       } else {
         this.model.moveSnake(nextCoords[0], nextCoords[1]);
+        this.detectCollision();
         newSnakeCoords = this.model.getSnakeCoords();
         this.removeFromSet(newSnakeCoords);
         this.addToSet(newSnakeCoords[newSnakeCoords.length - 1]);
       }
-      console.log(this.gameBoardSet);
 
-      this.view.renderSnake(newSnakeCoords, this.model.currDirection);
+      if (this.moveIntervalID !== null) {
+        this.view.renderSnake(newSnakeCoords, this.model.currDirection);
+      }
     }, 200);
   }
 
   ObjectSpawnLoop() {
-    setInterval(() => {
-      this.view.clearObject();
-      
-      this.view.renderObject();
+    return setInterval(() => {
+      if (this.applePosition !== null) {
+        this.view.clearObject(this.applePosition);
+        this.model.gameBoard.deleteAtCoords(this.applePosition);
+        this.applePosition = null;
+      }
+      this.spawnApple();
+      this.view.renderObject(this.applePosition);
     }, 10000);
   }
 
@@ -165,5 +178,41 @@ export class Controller {
   addToSet(tailCoord) {
     let tailCoordAsString = tailCoord[0] + "," + tailCoord[1];
     this.gameBoardSet.add(tailCoordAsString);
+  }
+
+  spawnApple() {
+    const availableOptions = Array.from(this.gameBoardSet);
+    const randomIndex = this.getRandomInt(availableOptions.length);
+    let randomCoordAsString = availableOptions[randomIndex];
+    const [x, y] = randomCoordAsString.split(",").map(Number);
+    this.applePosition = [x, y];
+    this.model.gameBoard.insertAtCoords(x, y, "apple");
+    console.log("apple spawned at: " + [x, y]);
+  }
+
+  getRandomInt(max) {
+    return Math.floor(Math.random() * max);
+  }
+
+  detectCollision() {
+    const snakeCoords = this.model.getSnakeCoords().slice(1);
+
+    for (let coords of snakeCoords) {
+      if (
+        this.model.head.position[0] === coords[0] &&
+        this.model.head.position[1] === coords[1]
+      ) {
+        console.log("GAME OVER!!!!!!!");
+        clearInterval(this.moveIntervalID);
+        clearInterval(this.objectSpawnIntervalID);
+        this.moveIntervalID = null;
+        this.objectSpawnIntervalID = null;
+        if (this.applePosition !== null) {
+          this.view.clearObject(this.applePosition);
+          this.model.gameBoard.delete(this.applePosition);
+          this.applePosition = null;
+        }
+      }
+    }
   }
 }

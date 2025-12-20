@@ -12,7 +12,7 @@ export class gameBoard {
         this.grid.push([j, i, null]); // put an object (apple, bomb) instead of false?
 
         const gridDiv = document.createElement("div");
-        gridDiv.setAttribute("data-coords", [j,i]);
+        gridDiv.setAttribute("data-coords", [j, i]);
         gridDiv.classList.add("grid-div");
         gridDivContainer.append(gridDiv);
       }
@@ -25,8 +25,13 @@ export class gameBoard {
       return this.grid[x * 25 + y];
   }
 
-  insertAtCoords(x,y, item){
+  insertAtCoords(x, y, item) {
     if ((x >= 0 || x <= 24) && (y >= 0 || y <= 24))
-      this.grid[x * 25 + y][2] = item
+      this.grid[x * 25 + y][2] = item;
+  }
+
+  deleteAtCoords(x, y) {
+    if ((x >= 0 || x <= 24) && (y >= 0 || y <= 24))
+      this.grid[x * 25 + y][2] = null;
   }
 }

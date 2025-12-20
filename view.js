@@ -10,6 +10,9 @@ snakeBody.classList.add("body");
 const snakeTurn = new Image();
 snakeTurn.src = "./assets/snake-turn.png";
 snakeTurn.classList.add("turn");
+const apple = new Image();
+apple.src = "./assets/apple.png";
+apple.classList.add("apple");
 
 export class View {
   constructor() {
@@ -62,7 +65,9 @@ export class View {
 
   renderObject(objectCoords) {
     if(objectCoords !== null){
-      
+      const gridDiv = document.querySelector(`[data-coords="${objectCoords}"]`);
+      const newApple = apple.cloneNode(true);
+      gridDiv.append(newApple);
     }
   }
 
