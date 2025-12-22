@@ -5,7 +5,7 @@ export class Controller {
   startButton;
   applePosition;
   moveIntervalID;
-  objectSpawnIntervalID;
+  highScore;
 
   constructor(model, view) {
     this.view = view;
@@ -15,24 +15,36 @@ export class Controller {
     this.gameBoardSet = new Set();
     this.applePosition = null;
     this.moveIntervalID = null;
-    this.objectSpawnIntervalID = null;
+    this.gameLost = false;
 
-    for (let i = 0; i < 25; i++) {
-      for (let j = 0; j < 25; j++) {
+    for (let i = 0; i < 18; i++) {
+      for (let j = 0; j < 18; j++) {
         this.gameBoardSet.add(j + "," + i);
       }
     }
 
     this.startButton = document.querySelector(".start-button");
     this.musicPlayer = document.querySelector("#musicplayer");
+    this.appleBite = document.querySelector("#appleBite");
+    this.losingSound = document.querySelector("#lose");
+    this.losingText = document.querySelector(".losing-text");
     this.directionQueue = null;
+    this.score = document.querySelector(".score");
+    this.grid = document.querySelector("#grid");
+    this.controls = document.querySelector("#controls");
+    this.buttons = document.querySelectorAll("button");
 
     this.startButton.addEventListener("click", () => {
       this.handleStartClick();
     });
 
-    document.addEventListener("keydown", (e) => {
-      this.directionQueue = e.key;
+    this.buttons.forEach((button) => {
+      if (button.classList.contains("control")) {
+        button.addEventListener("click", (e) => {
+          this.directionQueue = e.target.textContent;
+          console.log(e.target.textContent);
+        });
+      }
     });
   }
 
@@ -48,6 +60,9 @@ export class Controller {
       this.gameStarted = true;
       this.startButton.classList.remove("visible");
       this.startButton.classList.add("clicked");
+      this.score.classList.remove("invisible");
+      this.grid.classList.remove("invisible");
+      this.controls.classList.remove("invisible");
 
       setTimeout(() => {
         this.startButton.disabled = true;
@@ -60,7 +75,7 @@ export class Controller {
       // movementLoop:
 
       this.moveIntervalID = this.moveLoop();
-      this.objectSpawnIntervalID = this.ObjectSpawnLoop();
+      this.ObjectSpawnLoop();
     }
   }
 
@@ -82,13 +97,16 @@ export class Controller {
         this.model.gameBoard.getCoords(nextCoords[0], nextCoords[1])[2] ===
         "apple"
       ) {
-        console.log("found");
+        this.appleBite.play().catch((error) => {
+          console.error(error);
+        });
         this.model.growSnake(nextCoords[0], nextCoords[1]);
         newSnakeCoords = this.model.getSnakeCoords();
         this.removeFromSet(newSnakeCoords);
-        this.view.clearObject(this.applePosition);
-        this.applePosition = null;
+        this.ObjectSpawnLoop();
         this.model.gameBoard.deleteAtCoords(nextCoords[0], nextCoords[1]);
+        this.model.length++;
+        this.score.textContent = "Score: " + this.model.length;
       } else {
         this.model.moveSnake(nextCoords[0], nextCoords[1]);
         this.detectCollision();
@@ -104,15 +122,13 @@ export class Controller {
   }
 
   ObjectSpawnLoop() {
-    return setInterval(() => {
-      if (this.applePosition !== null) {
-        this.view.clearObject(this.applePosition);
-        this.model.gameBoard.deleteAtCoords(this.applePosition);
-        this.applePosition = null;
-      }
-      this.spawnApple();
-      this.view.renderObject(this.applePosition);
-    }, 10000);
+    if (this.applePosition !== null) {
+      this.view.clearObject(this.applePosition);
+      this.model.gameBoard.deleteAtCoords(this.applePosition);
+      this.applePosition = null;
+    }
+    this.spawnApple();
+    this.view.renderObject(this.applePosition);
   }
 
   determineNextCoords(direction, coords) {
@@ -132,32 +148,32 @@ export class Controller {
   }
 
   validateCoords(coords) {
-    if (coords[0] > 24) {
+    if (coords[0] > 17) {
       coords[0] = 0;
     } else if (coords[0] < 0) {
-      coords[0] = 24;
+      coords[0] = 17;
     }
-    if (coords[1] > 24) {
+    if (coords[1] > 17) {
       coords[1] = 0;
     } else if (coords[1] < 0) {
-      coords[1] = 24;
+      coords[1] = 17;
     }
   }
 
   handleDirectionClick(key) {
-    if (key === "ArrowUp") {
+    if (key === "↑") {
       if (this.model.currDirection !== "down") {
         this.model.currDirection = "up";
       }
-    } else if (key === "ArrowDown") {
+    } else if (key === "↓") {
       if (this.model.currDirection !== "up") {
         this.model.currDirection = "down";
       }
-    } else if (key === "ArrowRight") {
+    } else if (key === "→") {
       if (this.model.currDirection !== "left") {
         this.model.currDirection = "right";
       }
-    } else if (key === "ArrowLeft") {
+    } else if (key === "←") {
       if (this.model.currDirection !== "right") {
         this.model.currDirection = "left";
       }
@@ -202,17 +218,36 @@ export class Controller {
         this.model.head.position[0] === coords[0] &&
         this.model.head.position[1] === coords[1]
       ) {
-        console.log("GAME OVER!!!!!!!");
-        clearInterval(this.moveIntervalID);
-        clearInterval(this.objectSpawnIntervalID);
-        this.moveIntervalID = null;
-        this.objectSpawnIntervalID = null;
-        if (this.applePosition !== null) {
-          this.view.clearObject(this.applePosition);
-          this.model.gameBoard.delete(this.applePosition);
-          this.applePosition = null;
-        }
+        this.gameLost = true;
       }
+    }
+    if (this.gameLost) {
+      clearInterval(this.moveIntervalID);
+      this.moveIntervalID = null;
+      if (
+        localStorage.getItem("highScore") < this.model.length ||
+        localStorage.getItem("highScore") === null
+      ) {
+        localStorage.setItem("highScore", this.model.length);
+      }
+      if (this.applePosition !== null) {
+        this.view.clearObject(this.applePosition);
+        this.model.gameBoard.deleteAtCoords(this.applePosition);
+        this.applePosition = null;
+      }
+      this.losingText.textContent =
+        "Game Over! Your score was: " +
+        this.model.length +
+        ". \nYour high score is: " +
+        localStorage.getItem("highScore");
+      this.score.classList.add("invisible");
+      this.grid.classList.add("invisible");
+      this.controls.classList.add("invisible");
+      this.musicPlayer.pause();
+      this.musicPlayer.currentTime = 0;
+      this.losingSound.play().catch((error) => {
+        console.error(error);
+      });
     }
   }
 }

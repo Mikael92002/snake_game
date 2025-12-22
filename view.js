@@ -16,7 +16,6 @@ apple.classList.add("apple");
 
 export class View {
   constructor() {
-    this.startButton = document.querySelector(".start-button");
   }
 
   renderSnake(coordsArr, direction) {

@@ -12,6 +12,7 @@ export class Snake {
     this.gameBoard = gameBoard;
     this.head = this.tail = new SnakeSection([0, 0]);
     this.currDirection = "right";
+    this.length = 1;
   }
 
   // use either moveSnake or growSnake depending if apple is present or not:

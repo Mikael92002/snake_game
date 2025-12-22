@@ -17,18 +17,35 @@
     <div id="start">
         <button class="start-button">START</button>
     </div>
+    <div class="score invisible">Score:1</div>
 
     <div id="game-section">
-        <div id="grid">
+        <div id="grid" class="invisible">
 
         </div>
     </div>
+    <div class="losing-text"></div>
 
     <audio id="musicplayer" loop>
         <source src="./assets/theme.mp3">
         Cannot play Music!
     </audio>
-    
+    <audio id="appleBite">
+        <source src="./assets/appleBite.mp3">
+    </audio>
+    <audio id="lose">
+        <source src="./assets/losing.mp3">
+    </audio>
+
+    <div id="controls" class="invisible">
+        <button id="up" class="control">↑</button>
+        <div>
+            <button id="left" class="control">←</button>
+            <button id="right" class="control">→</button>
+        </div>
+        <button id="down" class="control">↓</button>
+    </div>
+
     <script>
         const body = document.querySelector("body");
         const html = document.querySelector("html");

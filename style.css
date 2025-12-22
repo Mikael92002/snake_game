@@ -130,12 +130,34 @@ body {
     display: none;
 }
 
+.score.invisible {
+    opacity: 0;
+}
+
+.score {
+    font-family: "cartoon font";
+    color: rgb(219, 188, 104);
+    text-align: left;
+    width: 360px;
+    text-shadow: -1px -1px 0 #000,
+        1px -1px 0 #000,
+        -1px 1px 0 #000,
+        1px 1px 0 #000;
+    ;
+}
+
 #grid {
     background-color: white;
     padding: 6px;
     border-radius: 20px;
     outline: 3px solid black;
     box-sizing: border-box;
+}
+
+#grid.invisible {
+    opacity: 0;
+    width: 0px;
+    height: 0px;
 }
 
 .grid-div-container {
@@ -153,6 +175,34 @@ body {
 .grid-div>img {
     height: 20px;
     width: 20px;
+}
+
+.losing-text {
+    font-family: "cartoon font";
+    color: rgb(219, 188, 104);
+    text-shadow:
+        -1px -1px 0 #000,
+        1px -1px 0 #000,
+        -1px 1px 0 #000,
+        1px 1px 0 #000;
+}
+#controls{
+    display:flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-weight: 900;
+    transform:scale(1.9);
+    margin-top: 30px;
+}
+#controls>button{
+    margin: 15px;
+}
+#controls>div>button{
+    margin: 0px 15px;
+}
+#controls.invisible{
+    opacity: 0;
 }
 
 .head {
