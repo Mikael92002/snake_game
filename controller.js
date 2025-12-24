@@ -51,9 +51,6 @@ export class Controller {
   handleStartClick() {
     if (!this.gameStarted) {
       if (!this.musicPlaying) {
-        this.musicPlayer.play().catch((error) => {
-          console.error("Music playback failed", error);
-        });
         this.musicPlaying = true;
       }
 
@@ -243,8 +240,6 @@ export class Controller {
       this.score.classList.add("invisible");
       this.grid.classList.add("invisible");
       this.controls.classList.add("invisible");
-      this.musicPlayer.pause();
-      this.musicPlayer.currentTime = 0;
       this.losingSound.play().catch((error) => {
         console.error(error);
       });
